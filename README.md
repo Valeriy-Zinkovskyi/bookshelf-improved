@@ -22,12 +22,6 @@ This repository preserves the imported Git history. It is a separate continuatio
 - Repair the book details dialog, keyboard dismissal, and saved-list persistence.
 - Keep navigation and light/dark theme consistent across both pages.
 
-## Project status
-
-Work in progress. The first restoration pass targets the catalog and basic book-list interaction. Authentication, pagination, exact design matching, and the full course acceptance audit are not yet implemented or verified.
-
-Book records and covers are loaded from an external API. Unavailable covers use a labeled placeholder; external data may differ from the sample books in the design.
-
 ## Technologies
 
 HTML, CSS, JavaScript, Vite, Axios, browser localStorage, GitHub Actions, and GitHub Pages.
