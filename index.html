@@ -10,10 +10,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/bookshelf-improved/assets/index-d9b13309.js"></script>
-    <link rel="modulepreload" crossorigin href="/bookshelf-improved/assets/shopping-storage-e3685083.js">
+    <script type="module" crossorigin src="/bookshelf-improved/assets/index-9bc3a360.js"></script>
+    <link rel="modulepreload" crossorigin href="/bookshelf-improved/assets/support-348d2a68.js">
     <link rel="modulepreload" crossorigin href="/bookshelf-improved/assets/vendor-26fe51b3.js">
-    <link rel="stylesheet" href="/bookshelf-improved/assets/shopping-storage-40fd2f97.css">
+    <link rel="stylesheet" href="/bookshelf-improved/assets/support-d7cae3d4.css">
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -25,7 +25,7 @@
     </a>
     <nav class="header-nav" aria-label="Main navigation" id="main-navigation">
       <a href="./index.html" class="link-home">Home</a>
-      <a href="./shopping.html" class="link-shopping">Shopping list
+      <a href="./shopping.html" class="link-shopping">Shopping list <span class="saved-count" hidden></span>
         <svg width="20" height="20" aria-hidden="true"><use href="/bookshelf-improved/assets/sprite-8d957304.svg#icon-uil_cart"></use></svg>
       </a>
     </nav>
@@ -39,12 +39,12 @@
 
     <main class="general-container" id="main-content">
       <aside class="wrapper-cont" aria-label="Book categories and support for Ukraine">
-        <nav class="all-categories-container" aria-label="Book categories">
+        <details class="category-disclosure" open><summary>Browse categories <span aria-hidden="true">＋</span></summary><nav class="all-categories-container" aria-label="Book categories">
   <ul class="all-categories">
     <li><button type="button" class="list-category is-active" data-category="" aria-current="true">All categories</button></li>
   </ul>
   <p class="category-status" role="status"></p>
-</nav>
+</nav></details>
 
         <section id="charity-section" aria-labelledby="support-title">
   <div class="support-section">
@@ -55,9 +55,21 @@
 
       </aside>
       <section class="catalog" aria-labelledby="catalog-title">
-  <h1 id="catalog-title" class="Books-best-sellers-text">Best Sellers <span>Books</span></h1>
+  <div class="catalog-intro">
+    <p class="eyebrow">Your next chapter starts here</p>
+    <h1 id="catalog-title" class="Books-best-sellers-text">Best Sellers <span>Books</span></h1>
+    <p class="catalog-description">Discover a new perspective. Find a story that stays with you.</p>
+    <a class="collection-link" href="./shopping.html">Your personal collection <span aria-hidden="true">↗</span></a>
+  </div>
+  <form class="catalog-tools" role="search" id="catalog-search">
+    <div class="search-field"><span aria-hidden="true">⌕</span><input id="book-search" type="search" aria-label="Search loaded books by title or author" placeholder="Search title or author…" autocomplete="off" maxlength="200" /><kbd aria-hidden="true">/</kbd></div>
+    <label class="sort-field"><span class="sr-only">Sort books</span><select id="book-sort"><option value="recommended">Recommended</option><option value="title">Title: A–Z</option><option value="author">Author: A–Z</option></select></label>
+    <button class="saved-filter" type="button" aria-pressed="false">♡ Saved only</button>
+  </form>
+  <div class="catalog-meta"><p id="results-summary" role="status"></p><button class="reset-filters" type="button" hidden>Reset filters</button></div>
   <p class="catalog-status" role="status" aria-live="polite"></p>
   <div class="book-category-list" aria-busy="true"></div>
+  <div class="catalog-empty" hidden><span aria-hidden="true">⌕</span><h2>No matching books</h2><p>Try another title or author, or reset your filters.</p><button class="see-more" type="button">Reset filters</button></div>
 </section>
 
     </main>
