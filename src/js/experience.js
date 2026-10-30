@@ -41,5 +41,7 @@ document.querySelector('#scroll-btn')?.addEventListener('click', () => window.sc
 const footer = element('footer', 'site-footer');
 const brand = element('a', 'footer-brand', 'Bookshelf');
 brand.href = './index.html';
-footer.append(brand, element('p', '', 'One more book. A whole new world.'), element('span', '', 'Read. Discover. Repeat.'));
+const credit = element('a', 'cover-credit', 'Additional covers: Open Library');
+credit.href = 'https://openlibrary.org/'; credit.target = '_blank'; credit.rel = 'noopener noreferrer';
+footer.append(brand, element('p', '', 'One more book. A whole new world.'), credit);
 document.body.append(footer);

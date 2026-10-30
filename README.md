@@ -12,6 +12,7 @@ This repository preserves the imported Git history. It is a separate continuatio
 
 ## Features
 
+- Reserve cover loading by ISBN through Open Library when the primary image is unavailable.
 - Search the loaded selection by title or author, sort alphabetically, and filter saved books.
 - Save books directly from catalog cards; the navigation counter updates immediately.
 - Manage a personal collection with an undo option after removing a book.

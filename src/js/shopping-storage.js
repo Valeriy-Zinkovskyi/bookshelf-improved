@@ -8,7 +8,7 @@ export function getShoppingList() {
 export function toggleSavedBook(book) {
   const list = getShoppingList();
   const index = list.findIndex(item => item.id === book._id);
-  if (index === -1) list.push({ id: book._id, title: book.title, author: book.author, image: book.book_image, description: book.description, buy_links: book.buy_links, list_name: book.list_name });
+  if (index === -1) list.push({ id: book._id, title: book.title, author: book.author, image: book.book_image, primary_isbn13: book.primary_isbn13, primary_isbn10: book.primary_isbn10, description: book.description, buy_links: book.buy_links, list_name: book.list_name });
   else list.splice(index, 1);
   localStorage.setItem('shoppingList', JSON.stringify(list));
   globalThis.document?.dispatchEvent(new CustomEvent('bookshelf:saved-changed'));

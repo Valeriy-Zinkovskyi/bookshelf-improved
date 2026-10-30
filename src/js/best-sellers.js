@@ -64,7 +64,7 @@ document.addEventListener('keydown', event => {
 });
 document.addEventListener('bookshelf:saved-changed', () => {
   readSaved();
-  if (controls.savedOnly) renderCollection();
+  if (controls.savedOnly) { const restoreFocus = document.activeElement?.classList.contains('quick-save'); renderCollection(); if (restoreFocus) savedFilter.focus(); }
   else catalog.querySelectorAll('.quick-save').forEach(button => reflectSave(button, button.dataset.id));
 });
 window.addEventListener('storage', () => { readSaved(); renderCollection(); });

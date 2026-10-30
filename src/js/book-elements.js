@@ -17,11 +17,24 @@ export function coverImage(book, className = 'bs-book-image') {
   const source = book.book_image || book.image;
   let validSource;
   try { const url = new URL(source); if (url.protocol === 'https:') validSource = url.href; } catch { /* Missing external cover. */ }
-  image.src = validSource || fallbackCover;
-  image.addEventListener('error', () => {
-    image.src = fallbackCover;
-    image.alt = `Cover unavailable: ${book.title || 'Book'}`;
-  }, { once: true });
+  const explicitIsbn = String(book.primary_isbn13 || book.primary_isbn10 || '').replace(/[- ]/g, '');
+  const sourceIsbn = validSource?.match(/\/(97[89]\d{10})\.(?:jpg|png)(?:\?|$)/i)?.[1];
+  const isbn = /^(?:\d{13}|\d{9}[\dX])$/.test(explicitIsbn) ? explicitIsbn : sourceIsbn;
+  const reserve = isbn ? `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg?default=false` : '';
+  const sources = [...new Set([validSource, reserve].filter(Boolean))];
+  let sourceIndex = 0;
+  image.referrerPolicy = 'no-referrer';
+  function useNextSource() {
+    const next = sources[sourceIndex++];
+    image.src = next || fallbackCover;
+    if (!next) {
+      image.alt = `Cover unavailable: ${book.title || 'Book'}`;
+      image.classList.add('cover-is-unavailable');
+      image.removeEventListener('error', useNextSource);
+    }
+  }
+  image.addEventListener('error', useNextSource);
+  useNextSource();
   return image;
 }
 
