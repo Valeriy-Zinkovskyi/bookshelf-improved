@@ -1,129 +1,69 @@
-import { getBooksById } from './images-api';
-const listCategory = document.querySelector(`.book-category-list`);
+import { getBooksById } from './images-api.js';
+import { element, coverImage, storeLinks } from './book-elements.js';
+import { getShoppingList, toggleSavedBook } from './shopping-storage.js';
 
-// const listCategory = document.querySelector(`.book-category-list`);
-const body = document.querySelector(`body`);
-const byModal = document.querySelector(`.modal`);
-const idList = document.querySelector(`.bs-book-item`);
-const overley = document.querySelector(`.overley`);
+const dialog = document.querySelector('.book-dialog');
+const body = dialog?.querySelector('.dialog-body');
+let activeRequest = 0;
+let previousFocus;
 
-byModal.style.display = `none`;
-// bs-book-item; book-category-list
-export function openModal(bookInfo) {
-  overley.style.display = `block`;
-
-  getBooksById(bookInfo)
-    .then(idBook => {
-      const { title, author, book_image, description, buy_links, _id } = idBook;
-      // byModal.innerHTML = ``;
-      console.log(idBook);
-      const urlAmazon = buy_links[0].url;
-      const urlApple = buy_links[1].url;
-      body.style.overflow = `hidden`;
-      byModal.innerHTML = `
-    <div class="modal-1">
-      <div class="modal-content">
-        <div class="modal-content-container">
-         <img class="close" id="closeModalBtn" src="../img/x-close.png" alt="" />
-         <img src="${book_image}" class="modal-image" alt="${title}" />
-         <div class="text-content-modal">
-            <h2 id="modalTitle" class="modal-title">${title}</h2>
-            <p id="modalAuthor" class="modal-author">${author}</p>
-            <p id="modalDescription" class="modal-description">${description}</p>
-          <div class="link-container">  
-            <a href="${urlAmazon}" target="_blank"><img src="../img/amazon.png" alt="" /></a>
-            <a href="${urlApple}" target="_blank"><img src="../img/kindle.png" alt="" /></a> 
-          </div>                
-         </div>      
-          
-         </div>      
-         <button id="modal-add-to-list" type="button" class="modal-button">ADD TO SHOPPING LIST
-         </button>
-      </div>
-    </div>
-        
-        `;
-      const addToShoppingListBtn = document.getElementById('modal-add-to-list');
-
-      const closeModalBtn = document.getElementById('closeModalBtn');
-
-      closeModalBtn.addEventListener('click', closeModal);
-      addToShoppingListBtn.addEventListener('click', addToShoppingList);
-
-      function addToShoppingList() {
-        const shoppingList =
-          JSON.parse(localStorage.getItem('shoppingList')) || [];
-
-        // Проверяем, есть ли книга уже в списке
-        const bookIndex = shoppingList.findIndex(item => item.id === _id);
-
-        if (bookIndex === -1) {
-          // Книги нет в списке, добавляем
-          shoppingList.push({
-            id: _id,
-            title: title,
-            author: author,
-            image: book_image,
-            description: description,
-            buy_links: buy_links,
-          });
-
-          addToShoppingListBtn.textContent = 'Remove from the shopping list';
-        } else {
-          // Книга уже в списке, удаляем
-          shoppingList.splice(bookIndex, 1);
-          addToShoppingListBtn.textContent = 'Add to shopping list';
-        }
-
-        // Сохраняем весь список книг в локальном хранилище
-        localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
-      }
-
-      closeModalBtn.addEventListener('click', () => {
-        // Вызываем функцию deleteToShoppingList при закрытии модального окна
-        deleteToShoppingList();
-        closeModal();
-      });
-
-      function deleteToShoppingList() {
-        // Проверяем текущий текст кнопки, чтобы правильно обновить локальное хранилище
-        if (
-          addToShoppingListBtn.textContent === 'Remove from the shopping list'
-        ) {
-          localStorage.removeItem('shoppingList');
-        }
-      }
-
-      // closeModal();
-      byModal.style.display = 'block';
-    })
-    .catch(err => console.log(err));
-}
-byModal.addEventListener('click', function (event) {
-  if (event.target === byModal) {
-    closeModal();
-  }
+dialog?.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
+dialog?.addEventListener('click', event => { if (event.target === dialog && (event.clientX < dialog.getBoundingClientRect().left || event.clientX > dialog.getBoundingClientRect().right || event.clientY < dialog.getBoundingClientRect().top || event.clientY > dialog.getBoundingClientRect().bottom)) dialog.close(); });
+dialog?.addEventListener('close', () => {
+  activeRequest++;
+  document.body.classList.remove('modal-open');
+  previousFocus?.focus();
 });
-function deleteToShoppingList() {
-  // Проверяем текущий текст кнопки, чтобы правильно обновить локальное хранилище
-  if (addToShoppingListBtn.textContent === 'Remove from the shopping list') {
-    localStorage.removeItem('shoppingList');
+
+export async function openModal(book) {
+  if (!dialog) return;
+  previousFocus = document.activeElement;
+  const current = ++activeRequest;
+  body.replaceChildren(element('h2', '', 'Loading book details…'));
+  body.firstChild.id = 'modal-title';
+  if (!dialog.open) dialog.showModal();
+  document.body.classList.add('modal-open');
+  try {
+    const details = await getBooksById(book._id);
+    if (current !== activeRequest || !dialog.open) return;
+    const content = element('div', 'dialog-content');
+    const text = element('div', 'dialog-text');
+    const title = element('h2', '', details.title);
+    title.id = 'modal-title';
+    text.append(title, element('p', 'author-book', details.author || 'Unknown author'), element('p', 'dialog-description', details.description || 'No description is available for this book.'), storeLinks(details.buy_links));
+    const cover = coverImage(details, 'dialog-cover');
+    cover.loading = 'eager';
+    content.append(cover, text);
+    const save = element('button', 'save-book');
+    save.type = 'button';
+    const message = element('p', 'save-status');
+    message.setAttribute('role', 'status');
+    function reflectSaved() {
+      try {
+        const saved = getShoppingList().some(item => item.id === details._id);
+        save.textContent = saved ? 'Remove from the shopping list' : 'Add to shopping list';
+        save.setAttribute('aria-pressed', String(saved));
+      } catch {
+        save.textContent = 'Add to shopping list';
+        message.textContent = 'Your saved list is unavailable in this browser.';
+      }
+    }
+    reflectSaved();
+    save.addEventListener('click', () => {
+      try {
+        const saved = toggleSavedBook(details);
+        reflectSaved();
+        message.textContent = saved ? 'Book saved. Find it in your shopping list.' : 'Book removed from your shopping list.';
+      } catch { message.textContent = 'Could not save changes. Please allow browser storage.'; }
+    });
+    body.replaceChildren(content, save, message);
+  } catch {
+    if (current !== activeRequest || !dialog.open) return;
+    const title = element('h2', '', 'Book details unavailable');
+    title.id = 'modal-title';
+    const retry = element('button', 'retry-button', 'Try again');
+    retry.type = 'button';
+    retry.addEventListener('click', () => openModal(book));
+    body.replaceChildren(title, element('p', '', 'Please check your connection and try again.'), retry);
   }
 }
-listCategory.addEventListener('click', openToModal);
-
-function openToModal(e) {
-  const bookItem = e.target.closest('.bs-book-item');
-
-  if (bookItem) {
-    const id = bookItem.id;
-    openModal(id);
-  }
-}
-function closeModal() {
-  body.style.overflow = `scroll`;
-  byModal.style.display = 'none';
-  overley.style.display = `none`;
-}
-
-// export { openToModal };

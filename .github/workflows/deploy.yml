@@ -6,6 +6,8 @@ on:
 
 jobs:
   build-and-deploy:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -13,7 +15,8 @@ jobs:
 
       - name: Install and build 🔧
         run: |
-          npm install
+          npm ci
+          npm test
           npm run build
 
       - name: Deploy 🚀

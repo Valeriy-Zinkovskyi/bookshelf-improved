@@ -95,10 +95,12 @@ const charities = [
             supportImg.classList.add('charity-logo');
             supportImg.src = charity.img;
             supportImg.alt = charity.title;
-            supportImg.width = charity.width;
+            supportImg.width = parseInt(charity.width);
+            supportImg.style.width = charity.width;
+            charityLink.target = '_blank';
+            charityLink.rel = 'noopener noreferrer';
 
-            const pixelRatio = window.devicePixelRatio || 1;
-            supportImg.width = parseInt(charity.width) * pixelRatio;
+            supportImg.height = 32;
 
             const numberSpan = document.createElement('span');
             numberSpan.classList.add('charity-number');
@@ -119,6 +121,8 @@ const charities = [
 
         const supportButton = document.createElement('button');
         supportButton.classList.add('support-button');
+        supportButton.type = 'button';
+        supportButton.setAttribute('aria-label', 'Show more charities');
 
         // const arrowIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         // arrowIcon.classList.add('arrow-icon');
@@ -145,6 +149,7 @@ const charities = [
 
         supportButton.addEventListener('click', () => {
             charityListContainer.classList.toggle('showing-items-4-9');
+            supportButton.setAttribute('aria-label', charityListContainer.classList.contains('showing-items-4-9') ? 'Show previous charities' : 'Show more charities');
 
             arrowIcon.classList.toggle('arrow-rotate', charityListContainer.classList.contains('showing-items-4-9'));
 

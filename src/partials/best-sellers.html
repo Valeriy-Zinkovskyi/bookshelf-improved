@@ -1,21 +1,5 @@
-<div class="container">
-  <h1 class="Books-best-sellers-text">
-    Best Sellers
-    <span class="Books-best-sellers-text-span">Books</span>
-  </h1>
-
-  <ul class="book-category-list"></ul>
-  <div></div>
-
-  <button id="scroll-btn" class="scroll-butn">
-    <svg class="scroll-icon">
-      <use
-        href="../css/sprite.svg#icon-Vector"
-        width="100%"
-        height="100%"
-      ></use>
-    </svg>
-  </button>
-</div>
-
-<button id="scroll-btn" class="scroll-btn"></button>
+<section class="catalog" aria-labelledby="catalog-title">
+  <h1 id="catalog-title" class="Books-best-sellers-text">Best Sellers <span>Books</span></h1>
+  <p class="catalog-status" role="status" aria-live="polite"></p>
+  <div class="book-category-list" aria-busy="true"></div>
+</section>

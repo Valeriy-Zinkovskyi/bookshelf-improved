@@ -1,63 +1,16 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://books-backend.p.goit.global/';
-
-function handleResponse(response) {
-  if (!response.data) {
-    throw new Error('Invalid response format');
-  }
-  return response.data;
+const api = axios.create({ baseURL: 'https://books-backend.p.goit.global/books/', timeout: 15000 });
+async function getList(path, params) {
+  const { data } = await api.get(path, { params });
+  if (!Array.isArray(data)) throw new Error('The book service returned an invalid list.');
+  return data;
 }
-
-function handleError(error) {
-  if (error.response) {
-    throw new Error(`Request failed with status ${error.response.status}`);
-  } else if (error.request) {
-    throw new Error('No response received from the server');
-  } else {
-    throw new Error(`Error setting up the request: ${error.message}`);
-  }
+export const getCategoryList = () => getList('category-list');
+export const getTopBooks = () => getList('top-books');
+export const getCategory = category => getList('category', { category });
+export async function getBooksById(id) {
+  const { data } = await api.get(encodeURIComponent(id));
+  if (!data?._id) throw new Error('Book details are unavailable.');
+  return data;
 }
-
-async function getCategoryList() {
-  try {
-    const response = await axios.get(`${BASE_URL}books/category-list`);
-    return handleResponse(response);
-  } catch (error) {
-    handleError(error);
-  }
-}
-
-async function getTopBooks() {
-  try {
-    const response = await axios.get(`${BASE_URL}books/top-books`);
-    return handleResponse(response);
-  } catch (error) {
-    handleError(error);
-  }
-}
-
-async function getCategory(listname) {
-  try {
-    const response = await axios.get(`${BASE_URL}books/category?category=${listname}`);
-    return handleResponse(response);
-  } catch (error) {
-    handleError(error);
-  }
-}
-
-async function getBooksById(id) {
-  try {
-    const response = await axios.get(`${BASE_URL}books/${id}`);
-    return handleResponse(response);
-  } catch (error) {
-    handleError(error);
-  }
-}
-
-export {
-  getCategoryList,
-  getTopBooks,
-  getCategory,
-  getBooksById
-};

@@ -1,12 +1,13 @@
 {
-  "name": "team-my--project",
+  "name": "bookshelf-improved",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=/team-my--project/",
-    "preview": "vite preview"
+    "build": "vite build --base=/bookshelf-improved/",
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.js"
   },
   "devDependencies": {
     "glob": "^8.1.0",

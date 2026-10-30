@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shopping list</title>
-    <link rel="stylesheet" href="./css/index.css" />
-    <link rel="stylesheet" href="./css/shopping.css" />
-    <link rel="stylesheet" href="./css/index-shopping.css" />
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Raleway:wght@800&family=Roboto:wght@400;500;700;900&display=swap"
-      rel="stylesheet">
-  </head>
-  <body>
-    <load ="partials/header.html" />
-
-    <!-- <load ="partials/support.html" /> -->
-
-    <load ="partials/shopping-list.html" />
-
-    <script type="module" src="./js/index-shopping.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookshelf — Shopping List</title>
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+</head>
+<body class="shopping-page">
+  <load ="partials/header.html" />
+  <main class="general-container" id="main-content">
+    <aside class="shopping-support"><load ="partials/support.html" /></aside>
+    <section class="catalog" aria-labelledby="shopping-title">
+      <h1 id="shopping-title" class="Books-best-sellers-text">Shopping <span>List</span></h1>
+      <p class="shopping-status" role="status"></p>
+      <ul class="shopping-book-ul"></ul>
+      <div class="shopping-list-empty" hidden>
+        <p>This page is empty, add some books and proceed to order.</p>
+        <img src="./img/empty-list.png" width="322" height="241" alt="A stack of books" />
+        <a class="see-more" href="./index.html">Browse books</a>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="./js/index-shopping.js"></script>
+</body>
 </html>

@@ -1,75 +1,30 @@
-document.addEventListener('DOMContentLoaded', function () {
-  displayShoppingList(); // Вызываем функцию для отображения книг при загрузке страницы
-});
+import { getShoppingList, removeSavedBook } from './shopping-storage.js';
+import { element, coverImage, storeLinks } from './book-elements.js';
+const list = document.querySelector('.shopping-book-ul');
+const empty = document.querySelector('.shopping-list-empty');
+const status = document.querySelector('.shopping-status');
 
-function getShoppingList() {
-  // Получаем данные из локального хранилища
-  const shoppingList = JSON.parse(localStorage.getItem('shoppingList')) || [];
-  return shoppingList;
+function render() {
+  try {
+    const books = getShoppingList();
+    list.replaceChildren();
+    status.textContent = '';
+    empty.hidden = books.length > 0;
+    for (const book of books) {
+      const item = element('li', 'shopping-book-li');
+      const remove = element('button', 'shopping-delete-btn', '×');
+      remove.type = 'button';
+      remove.setAttribute('aria-label', `Remove ${book.title}`);
+      remove.addEventListener('click', () => {
+        try { removeSavedBook(book.id); render(); }
+        catch { status.textContent = 'Could not remove this book. Please allow browser storage.'; }
+      });
+      const text = element('div', 'shopping-text-container');
+      text.append(element('h2', 'shopping-book-title', book.title), element('p', 'shopping-book-genre', book.list_name || ''), element('p', 'shopping-book-descrip', book.description || 'No description is available for this book.'), element('p', 'author-book', book.author || 'Unknown author'), storeLinks(book.buy_links));
+      item.append(coverImage(book, 'shopping-book-image'), text, remove);
+      list.append(item);
+    }
+  } catch { status.textContent = 'Your saved list could not be read. Please check browser storage permissions.'; empty.hidden = true; }
 }
-
-function displayShoppingList() {
-  const shoppingList = getShoppingList();
-  const bookList = document.querySelector('.shopping-book-ul');
-  const emptyListMessage = document.querySelector('.shopping-list-empty');
-
-  // Проверяем наличие сохраненных книг в локальном хранилище
-  if (shoppingList.length > 0) {
-    bookList.innerHTML = shoppingList
-      .map(
-        ({ id, title, author, image, description, buy_links }) => `
-          <li class="shopping-book-li">
-            <button class="shopping-delete-btn" data-book-id="${id}">
-              <img
-                class="shopping-list-svg"
-                width="16"
-                height="16"
-                src="../img/trash.png"
-              />
-            </button>
-            <img class="shopping-book-image" src="${image}" alt="${title}" />
-            <div class="shopping-text-container">
-              <p class="shopping-book-title">${title}</p>
-              <p class="shopping-book-descrip">${description}</p>
-              <p class="shopping-book-author">${author}</p>
-            </div>
-            <div class="amazon-kindle">
-              <a class='kindle-link' href='${buy_links}'>
-                <img
-                  class="kindle-pic"
-                  src="../img/kindle.png"
-                  style="background-color: transparent"
-                  alt="kindle"
-                />
-              </a>
-            </div>
-          </li>
-      `
-      )
-      .join('');
-
-    // Добавляем обработчик события для кнопок удаления
-    const deleteButtons = document.querySelectorAll('.shopping-delete-btn');
-    deleteButtons.forEach(button => {
-      button.addEventListener('click', handleDeleteButtonClick);
-    });
-
-    // Скрываем блок с пустым списком
-    emptyListMessage.style.display = 'none';
-  } else {
-    // Если список пуст, отображаем блок с сообщением о пустом списке
-    emptyListMessage.style.display = 'block';
-  }
-}
-
-function handleDeleteButtonClick(event) {
-  const bookId = event.currentTarget.getAttribute('data-book-id');
-  removeFromShoppingList(bookId);
-  displayShoppingList();
-}
-
-function removeFromShoppingList(bookId) {
-  const shoppingList = getShoppingList();
-  const updatedList = shoppingList.filter(book => book.id !== bookId);
-  localStorage.setItem('shoppingList', JSON.stringify(updatedList));
-}
+window.addEventListener('storage', render);
+render();

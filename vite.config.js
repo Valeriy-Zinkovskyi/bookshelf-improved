@@ -20,7 +20,7 @@ export default defineConfig(({ command }) => {
               return 'vendor';
             }
           },
-          entryFileNames: 'commonHelpers.js',
+          entryFileNames: 'assets/[name]-[hash].js',
         },
       },
       outDir: '../dist',
