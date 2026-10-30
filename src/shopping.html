@@ -16,7 +16,9 @@
     <aside class="shopping-support"><load ="partials/support.html" /></aside>
     <section class="catalog" aria-labelledby="shopping-title">
       <h1 id="shopping-title" class="Books-best-sellers-text">Shopping <span>List</span></h1>
+      <p class="shopping-intro">Good stories, saved for later. Your collection stays in this browser.</p>
       <p class="shopping-status" role="status"></p>
+      <div class="undo-removal" role="status" hidden><span></span><button type="button">Undo</button></div>
       <ul class="shopping-book-ul"></ul>
       <div class="shopping-list-empty" hidden>
         <p>This page is empty, add some books and proceed to order.</p>
@@ -25,6 +27,7 @@
       </div>
     </section>
   </main>
+  <button id="scroll-btn" class="scroll-btn" type="button" aria-label="Back to top" hidden>↑</button>
   <script type="module" src="./js/index-shopping.js"></script>
 </body>
 </html>

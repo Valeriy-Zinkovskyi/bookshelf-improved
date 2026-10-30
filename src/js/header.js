@@ -1,8 +1,8 @@
 const toggle = document.querySelector('#theme-toggle');
 const header = document.querySelector('.site-header');
 const menu = document.querySelector('.menu-toggle');
-let dark = false;
-try { dark = localStorage.getItem('bookshelfTheme') === 'dark'; } catch { /* Theme still works without storage. */ }
+let dark = window.matchMedia?.('(prefers-color-scheme: dark)').matches || false;
+try { const stored = localStorage.getItem('bookshelfTheme'); if (stored) dark = stored === 'dark'; } catch { /* Theme still works without storage. */ }
 function applyTheme() {
   document.body.classList.toggle('dark-theme', toggle.checked);
   document.documentElement.style.colorScheme = toggle.checked ? 'dark' : 'light';
@@ -26,3 +26,6 @@ menu.addEventListener('click', () => {
   menu.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
 });
 document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
+
+import './experience.js';
+document.addEventListener('click', event => { if (!header.contains(event.target)) closeMenu(); });

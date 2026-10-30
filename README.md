@@ -10,6 +10,14 @@ This project began as a team assignment. My original work included the category 
 
 This repository preserves the imported Git history. It is a separate continuation of [the original learning project](https://github.com/Valeriy-Zinkovskyi/bookshelf-original). Its original application behavior remains the before baseline; only presentation and publication paths are maintained there.
 
+## Features
+
+- Search the loaded selection by title or author, sort alphabetically, and filter saved books.
+- Save books directly from catalog cards; the navigation counter updates immediately.
+- Manage a personal collection with an undo option after removing a book.
+- Responsive layouts, collapsible mobile categories, keyboard search shortcut (`/`), and persistent themes.
+- Smooth scrolling, reading progress, loading skeletons, subtle card and dialog transitions, and reduced-motion support.
+
 ## Restoration
 
 - Cache successful API responses across navigation, share simultaneous requests, and pause after rate limits.

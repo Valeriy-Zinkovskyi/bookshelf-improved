@@ -1,5 +1,6 @@
 import { getBooksById } from './images-api.js';
 import { element, coverImage, storeLinks } from './book-elements.js';
+import { notify } from './experience.js';
 import { getShoppingList, toggleSavedBook } from './shopping-storage.js';
 
 const dialog = document.querySelector('.book-dialog');
@@ -54,6 +55,7 @@ export async function openModal(book) {
       try {
         const saved = toggleSavedBook(details);
         reflectSaved();
+        notify(saved ? 'Added to your collection' : 'Removed from your collection');
         message.textContent = saved ? 'Book saved. Find it in your shopping list.' : 'Book removed from your shopping list.';
       } catch { message.textContent = 'Could not save changes. Please allow browser storage.'; }
     });

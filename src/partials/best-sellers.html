@@ -1,5 +1,17 @@
 <section class="catalog" aria-labelledby="catalog-title">
-  <h1 id="catalog-title" class="Books-best-sellers-text">Best Sellers <span>Books</span></h1>
+  <div class="catalog-intro">
+    <p class="eyebrow">Your next chapter starts here</p>
+    <h1 id="catalog-title" class="Books-best-sellers-text">Best Sellers <span>Books</span></h1>
+    <p class="catalog-description">Discover a new perspective. Find a story that stays with you.</p>
+    <a class="collection-link" href="./shopping.html">Your personal collection <span aria-hidden="true">↗</span></a>
+  </div>
+  <form class="catalog-tools" role="search" id="catalog-search">
+    <div class="search-field"><span aria-hidden="true">⌕</span><input id="book-search" type="search" aria-label="Search loaded books by title or author" placeholder="Search title or author…" autocomplete="off" maxlength="200" /><kbd aria-hidden="true">/</kbd></div>
+    <label class="sort-field"><span class="sr-only">Sort books</span><select id="book-sort"><option value="recommended">Recommended</option><option value="title">Title: A–Z</option><option value="author">Author: A–Z</option></select></label>
+    <button class="saved-filter" type="button" aria-pressed="false">♡ Saved only</button>
+  </form>
+  <div class="catalog-meta"><p id="results-summary" role="status"></p><button class="reset-filters" type="button" hidden>Reset filters</button></div>
   <p class="catalog-status" role="status" aria-live="polite"></p>
   <div class="book-category-list" aria-busy="true"></div>
+  <div class="catalog-empty" hidden><span aria-hidden="true">⌕</span><h2>No matching books</h2><p>Try another title or author, or reset your filters.</p><button class="see-more" type="button">Reset filters</button></div>
 </section>

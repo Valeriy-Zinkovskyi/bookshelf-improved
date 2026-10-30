@@ -13,6 +13,7 @@ async function loadCategories() {
     const response = await getCategoryList();
     const categories = uniqueCategories(response);
     status.textContent = response.serviceNotice || '';
+    list.querySelectorAll('li:not(:first-child)').forEach(item => item.remove());
     for (const category of categories) {
       const item = element('li');
       const button = element('button', 'list-category', category.list_name);
@@ -40,7 +41,7 @@ function markSelection(name) {
 function select(name) {
   markSelection(name);
   clearTimeout(selectionTimer);
-  selectionTimer = setTimeout(() => showCatalog(name), 180);
+  selectionTimer = setTimeout(() => { showCatalog(name); if (innerWidth < 1200) document.querySelector('.catalog').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' }); }, 180);
 }
 list.addEventListener('click', event => {
   const button = event.target.closest('[data-category]');
@@ -48,7 +49,10 @@ list.addEventListener('click', event => {
 });
 document.addEventListener('bookshelf:category', event => {
   select(event.detail);
-  document.querySelector('.catalog').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelector('.catalog').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
 });
 document.addEventListener('bookshelf:selection-restored', event => markSelection(event.detail));
 loadCategories();
+
+const disclosure = document.querySelector('.category-disclosure');
+if (innerWidth < 768) disclosure.open = false;

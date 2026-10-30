@@ -1,8 +1,16 @@
-import { getShoppingList, removeSavedBook } from './shopping-storage.js';
+import { getShoppingList, removeSavedBook, restoreSavedBook } from './shopping-storage.js';
 import { element, coverImage, storeLinks } from './book-elements.js';
+import { notify } from './experience.js';
 const list = document.querySelector('.shopping-book-ul');
 const empty = document.querySelector('.shopping-list-empty');
 const status = document.querySelector('.shopping-status');
+const undo = document.querySelector('.undo-removal');
+let lastRemoved;
+undo.querySelector('button').addEventListener('click', () => {
+  if (!lastRemoved) return;
+  try { restoreSavedBook(lastRemoved); lastRemoved = null; undo.hidden = true; render(); notify('Book restored to your collection'); }
+  catch { status.textContent = 'Could not restore this book. Please allow browser storage.'; }
+});
 
 function render() {
   try {
@@ -16,7 +24,7 @@ function render() {
       remove.type = 'button';
       remove.setAttribute('aria-label', `Remove ${book.title}`);
       remove.addEventListener('click', () => {
-        try { removeSavedBook(book.id); render(); }
+        try { removeSavedBook(book.id); lastRemoved = book; undo.hidden = false; undo.querySelector('span').textContent = `Removed “${book.title}”.`; render(); undo.querySelector('button').focus(); }
         catch { status.textContent = 'Could not remove this book. Please allow browser storage.'; }
       });
       const text = element('div', 'shopping-text-container');
