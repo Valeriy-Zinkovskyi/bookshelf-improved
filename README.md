@@ -12,6 +12,8 @@ This repository preserves the imported Git history. It is a separate continuatio
 
 ## Restoration
 
+- Cache successful API responses across navigation, share simultaneous requests, and pause after rate limits.
+- Fall back to explicitly labeled saved results during service outages.
 - Restore bestseller loading, category filtering, and See More navigation.
 - Arrange the category list and charity block beside the desktop catalog, with responsive tablet and mobile layouts.
 - Remove duplicate categories and book entries returned by the external service.

@@ -1,4 +1,4 @@
-import { getTopBooks, getCategory } from './images-api.js';
+import { getTopBooks, getCategory, serviceErrorMessage } from './images-api.js';
 import { topCategories, uniqueBooks } from './catalog-data.js';
 import { element, coverImage } from './book-elements.js';
 import { openModal } from './modal-window.js';
@@ -7,6 +7,7 @@ const catalog = document.querySelector('.book-category-list');
 const title = document.querySelector('#catalog-title');
 const status = document.querySelector('.catalog-status');
 let requestNumber = 0;
+let lastRenderedCategory = '';
 
 function heading(name) {
   title.replaceChildren();
@@ -37,21 +38,27 @@ function selectCategory(name) {
 
 export async function showCatalog(category = '') {
   const current = ++requestNumber;
-  heading(category);
-  catalog.replaceChildren();
   catalog.setAttribute('aria-busy', 'true');
   status.textContent = 'Loading books…';
   try {
     if (category) {
-      const books = uniqueBooks(await getCategory(category));
+      const response = await getCategory(category);
+      const books = uniqueBooks(response);
       if (current !== requestNumber) return;
+      heading(category);
+      catalog.replaceChildren();
+      lastRenderedCategory = category;
       const list = element('ul', 'bs-book-list category-book-grid');
       list.append(...books.map(card));
       catalog.append(list);
-      status.textContent = books.length ? '' : 'No books were found in this category.';
+      status.textContent = books.length ? (response.serviceNotice || '') : 'No books were found in this category.';
     } else {
-      const groups = topCategories(await getTopBooks());
+      const response = await getTopBooks();
+      const groups = topCategories(response);
       if (current !== requestNumber) return;
+      heading('');
+      catalog.replaceChildren();
+      lastRenderedCategory = '';
       for (const group of groups) {
         const section = element('section', 'book-category');
         const list = element('ul', 'bs-book-list bestseller-grid');
@@ -63,11 +70,15 @@ export async function showCatalog(category = '') {
         section.append(element('h2', 'bs-h3', group.list_name), list, more);
         catalog.append(section);
       }
-      status.textContent = groups.length ? '' : 'No books are available right now.';
+      status.textContent = groups.length ? (response.serviceNotice || '') : 'No books are available right now.';
     }
-  } catch {
+  } catch (error) {
     if (current !== requestNumber) return;
-    status.textContent = 'Could not load books. Please check your connection and try again. ';
+    status.textContent = serviceErrorMessage(error, 'books') + ' ';
+    if (catalog.childElementCount) {
+      status.append(document.createTextNode('Showing the previous selection. '));
+      document.dispatchEvent(new CustomEvent('bookshelf:selection-restored', { detail: lastRenderedCategory }));
+    }
     const retry = element('button', 'retry-button', 'Try again');
     retry.type = 'button';
     retry.addEventListener('click', () => showCatalog(category));

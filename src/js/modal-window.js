@@ -24,7 +24,7 @@ export async function openModal(book) {
   if (!dialog.open) dialog.showModal();
   document.body.classList.add('modal-open');
   try {
-    const details = await getBooksById(book._id);
+    const details = await getBooksById(book._id, book);
     if (current !== activeRequest || !dialog.open) return;
     const content = element('div', 'dialog-content');
     const text = element('div', 'dialog-text');
@@ -38,6 +38,7 @@ export async function openModal(book) {
     save.type = 'button';
     const message = element('p', 'save-status');
     message.setAttribute('role', 'status');
+    message.textContent = details.serviceNotice || '';
     function reflectSaved() {
       try {
         const saved = getShoppingList().some(item => item.id === details._id);
