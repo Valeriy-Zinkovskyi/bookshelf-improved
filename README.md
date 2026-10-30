@@ -2,13 +2,13 @@
 
 **After — personal restoration of a GoIT team learning project.** Based on the original Bookshelf design.
 
-**[After — improved website](https://valeriy-zinkovskyi.github.io/bookshelf-improved/)** · **[Before — original learning project](https://valeriy-zinkovskyi.github.io/team-my--project/index.html)** · **[Before repository](https://github.com/Valeriy-Zinkovskyi/team-my--project)**
+**[After — improved website](https://valeriy-zinkovskyi.github.io/bookshelf-improved/)** · **[Before — original learning project](https://valeriy-zinkovskyi.github.io/bookshelf-original/index.html)** · **[Before repository](https://github.com/Valeriy-Zinkovskyi/bookshelf-original)**
 
 ## Original contribution
 
 This project began as a team assignment. My original work included the category list with scrolling, the Support Ukraine section, and work integrating the team's components.
 
-This repository preserves the imported Git history. It is a separate continuation of [the original learning project](https://github.com/Valeriy-Zinkovskyi/team-my--project). Its original application behavior remains the before baseline; only presentation and publication paths are maintained there.
+This repository preserves the imported Git history. It is a separate continuation of [the original learning project](https://github.com/Valeriy-Zinkovskyi/bookshelf-original). Its original application behavior remains the before baseline; only presentation and publication paths are maintained there.
 
 ## Restoration
 
